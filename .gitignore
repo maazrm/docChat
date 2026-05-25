@@ -8,3 +8,4 @@ __pycache__/
 *.pyc
 .venv/
 uploads/
+tests/sample_docs/
