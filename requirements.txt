@@ -1,0 +1,22 @@
+# LLM + Embeddings
+openai>=1.30.0
+
+# Orchestration
+langgraph>=0.1.0
+langchain>=0.2.0
+langchain-openai>=0.1.0
+
+# Document parsing (handles digital + scanned PDFs, tables, images — no system deps needed)
+docling>=2.0.0
+
+# Vector store
+chromadb>=0.5.0
+
+# Keyword search
+rank_bm25>=0.2.2
+
+# Utilities
+tiktoken>=0.7.0
+streamlit>=1.35.0
+python-dotenv>=1.0.0
+Pillow>=10.0.0

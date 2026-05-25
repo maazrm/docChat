@@ -1,0 +1,10 @@
+.env
+.env.example
+.claude/
+data/chroma_db/
+data/bm25_index.pkl
+data/documents.db
+__pycache__/
+*.pyc
+.venv/
+uploads/
