@@ -7,8 +7,8 @@ from ingestion.docling_parser import parse_pdf, get_markdown
 from ingestion.chunker import chunk_document
 from ingestion.image_captioner import caption_all_figures
 
-doc_id = "google_env_2024"
-pdf_path = "tests/sample_docs/google-2024-environmental-report.pdf"
+doc_id = "google_env_1_10"
+pdf_path = "tests/sample_docs/google-2024-environmental-report-1-10.pdf"
 
 print(f"Parsing {pdf_path}...")
 doc = parse_pdf(pdf_path)
