@@ -39,7 +39,7 @@ def run(state: PipelineState) -> dict:
             all_ranked_lists.append(ranked)
 
         final_ranking = reciprocal_rank_fusion(all_ranked_lists)
-        top_ids = final_ranking[:5]
+        top_ids = final_ranking[:8]
 
         chunks = get_chunks_by_ids(top_ids)
         logger.info(f"[Retriever] Retrieved {len(chunks)} chunks from pages: {[c['page'] for c in chunks]}")

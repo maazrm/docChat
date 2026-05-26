@@ -112,7 +112,9 @@ if st.session_state.doc_id:
             retry_count = final_state.get("retry_count", 0)
 
             with st.expander("🔍 Validation details"):
-                if retry_count == 0:
+                if status == "fallback":
+                    st.markdown(f"**Status:** ⚠️ Failed after {retry_count} retry attempt(s) — fallback returned")
+                elif retry_count == 0:
                     st.markdown("**Status:** ✅ Passed on first attempt")
                 else:
                     st.markdown(f"**Status:** ✅ Passed after {retry_count} retry attempt(s)")

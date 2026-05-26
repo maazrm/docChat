@@ -20,6 +20,7 @@ def run(state: PipelineState) -> dict:
     prompt = f"""You are a query optimization assistant for a document retrieval system.
 
 Given the user's question, generate 1 to 3 search queries that would retrieve the most relevant passages from a document.
+- If the question references a specific section (e.g., "Section 3.1" or "3.1. Model-based Rewards"), include the section topic as a search query — do NOT generate bare section numbers like "Section 3.1" as they won't match anything.
 - If the question is simple and specific, return just 1 query.
 - If the question is multi-part or ambiguous, return 2-3 targeted sub-queries.
 - Expand abbreviations. Remove filler words.

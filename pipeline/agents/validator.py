@@ -12,8 +12,9 @@ logger = logging.getLogger(__name__)
 def _format_chunks(chunks: list[Chunk]) -> str:
     parts = []
     for i, chunk in enumerate(chunks, 1):
+        section = f" | Section: {chunk['section']}" if chunk.get('section') else ""
         parts.append(
-            f"[Chunk {i} | Page {chunk['page']} | Type: {chunk['chunk_type']}]\n{chunk['text']}"
+            f"[Chunk {i} | Page {chunk['page']}{section} | Type: {chunk['chunk_type']}]\n{chunk['text']}"
         )
     return "\n\n".join(parts)
 
@@ -84,6 +85,24 @@ Answer to audit:
         else:
             failed = [v["claim"] for v in verdicts if v["verdict"] == "unsupported"]
             logger.warning(f"[Validator] FAILED — {len(failed)} unsupported claim(s).")
+
+            # Check if retries are exhausted — generate fallback directly
+            if state.get("retry_count", 0) >= 3:
+                page_refs = sorted(set(c["page"] for c in state["retrieved_chunks"]))
+                page_list = ", ".join(f"Page {p}" for p in page_refs) if page_refs else "the document"
+                fallback = (
+                    f"I was unable to generate a fully grounded answer to this question. "
+                    f"The most relevant sections appear to be on {page_list}. "
+                    f"Please refer to those pages directly."
+                )
+                logger.warning("[Validator] Retries exhausted — returning fallback.")
+                return {
+                    "validation_passed": True,
+                    "claim_verdicts":    verdicts,
+                    "final_answer":      fallback,
+                    "status":            "fallback"
+                }
+
             return {
                 "validation_passed": False,
                 "claim_verdicts":    verdicts

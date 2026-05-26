@@ -12,8 +12,9 @@ def _format_chunks(chunks: list[Chunk]) -> str:
     """Format retrieved chunks into a readable context block for the prompt."""
     parts = []
     for i, chunk in enumerate(chunks, 1):
+        section = f" | Section: {chunk['section']}" if chunk.get('section') else ""
         parts.append(
-            f"[Chunk {i} | Page {chunk['page']} | Type: {chunk['chunk_type']}]\n{chunk['text']}"
+            f"[Chunk {i} | Page {chunk['page']}{section} | Type: {chunk['chunk_type']}]\n{chunk['text']}"
         )
     return "\n\n".join(parts)
 
