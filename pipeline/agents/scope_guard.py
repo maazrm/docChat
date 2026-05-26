@@ -17,13 +17,14 @@ def run(state: PipelineState) -> dict:
     """
     logger.info(f"[ScopeGuard] Query: {state['raw_query']}")
 
-    prompt = f"""You are a strict scope classifier. Your job is to decide if a user's question can be answered using the provided document.
+    prompt = f"""You are a scope classifier. Your job is to decide if a user's question can be answered using the provided document.
 
 Document summary: {state['topic_summary']}
 
 User question: {state['raw_query']}
 
-Can this question be answered from the document described above?
+Is this question likely answerable from the document described above?
+Default to "in_scope" (true) unless the question is clearly about a completely unrelated topic or document. If the document summary mentions related topics, sections, or themes — even broadly — answer true.
 Reply with a JSON object: {{"in_scope": true/false, "reason": "<one sentence>"}}
 Only reply with the JSON. Nothing else."""
 

@@ -23,9 +23,28 @@ def compute_doc_id(file_bytes: bytes) -> str:
     return hashlib.md5(file_bytes).hexdigest()
 
 
+def _extract_headings(markdown_text: str) -> list[str]:
+    """Extract all markdown headings from the full document."""
+    headings = []
+    for line in markdown_text.split("\n"):
+        stripped = line.strip()
+        if stripped.startswith("#"):
+            headings.append(stripped)
+    return headings
+
+
 def generate_topic_summary(markdown_text: str) -> str:
-    """Send the first ~1500 tokens of the document to gpt-4o-mini for a summary."""
-    truncated = markdown_text[:6000]
+    """
+    Generate a topic summary that captures the full scope of the document.
+    Samples the beginning (~3000 chars) plus all section headings found
+    throughout the document, so the scope guard can accurately judge
+    whether later sections are in scope.
+    """
+    # Take a larger sample from the beginning for intro context
+    intro_sample = markdown_text[:3000]
+    headings = _extract_headings(markdown_text)
+    headings_block = "\n".join(headings[:80])  # cap at 80 headings to stay within token limits
+
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -33,14 +52,21 @@ def generate_topic_summary(markdown_text: str) -> str:
             messages=[
                 {
                     "role": "system",
-                    "content": "You summarize documents concisely."
+                    "content": (
+                        "You generate document summaries that accurately reflect "
+                        "the full scope of the document, including all sections "
+                        "and topics covered. Be specific about sections and their content."
+                    )
                 },
                 {
                     "role": "user",
                     "content": (
-                        "In 2-3 sentences, summarize what this document is about. "
-                        "Be specific about its domain, subject matter, and scope.\n\n"
-                        f"Document excerpt:\n{truncated}"
+                        "Summarize this document in 3-5 sentences. Be specific about "
+                        "its domain, subject matter, and the key topics covered in each "
+                        "major section. Include enough detail that someone can judge "
+                        "whether a specific question belongs to this document.\n\n"
+                        f"Opening excerpt:\n{intro_sample}\n\n"
+                        f"All section headings in the document:\n{headings_block}"
                     )
                 }
             ]
