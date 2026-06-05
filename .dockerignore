@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.git/
+.gitignore
+.claude/
+data/chroma_db/
+data/bm25_index*.pkl
+data/documents.db
+uploads/
+tests/sample_docs/
+*.md
+Dockerfile
+.dockerignore
