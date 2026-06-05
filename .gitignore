@@ -1,5 +1,4 @@
 .env
-.env.example
 .claude/
 data/chroma_db/
 data/bm25_index.pkl
